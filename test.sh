@@ -53,13 +53,13 @@ done
 if $debug; then
 	echo "Building debug"
 	pushd test/build/debug
-        ./supportTests
+        ./socketTests
 	popd
 fi
 
 if $coverage; then
 	pushd test/build/coverage
-	./supportTests
+	./socketTests
 	lcov --directory . --capture --output-file ./code_coverage.info -rc lcov_branch_coverage=1
 	genhtml code_coverage.info --branch-coverage --output-directory ./../../../code_coverage_report/
 	popd
@@ -68,7 +68,7 @@ fi
 if $release; then
 	echo "Building release"
 	pushd test/build/release
-        ./supportTests
+        ./socketTests
 	popd
 fi
 

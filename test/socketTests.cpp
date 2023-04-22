@@ -16,10 +16,33 @@
 /// @{
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Fixture for Socket tests
+/// Fixture for TcpSocket tests
 ////////////////////////////////////////////////////////////////////////////////
-class SocketTests : public ::testing::Test
+class TCPSocketTest : public ::testing::Test
 {
+  protected:
+    /// Routines run before each tests
+    virtual void SetUp()
+    {
+        socket = std::make_unique<TCPSocket>();
+    }
+
+    /// Routines run before each tests
+    virtual void TearDown()
+    {
+        // Tear down the test fixture
+        socket.reset();
+    }
+
+    std::unique_ptr<TCPSocket> socket; ///< The socket
+
+    const int PORT = 8080; ///< The port to test on
 };
+
+TEST_F(TCPSocketTest, BindSocket)
+{
+    socket->bind(PORT);
+    EXPECT_EQ(socket->getBoundPort(), PORT);
+}
 
 /// @}

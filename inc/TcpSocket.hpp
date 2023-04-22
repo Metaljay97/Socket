@@ -12,8 +12,8 @@ class TCPSocket
   public:
     TCPSocket()
     {
-        sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
-        if (sockfd_ == -1)
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd == -1)
         {
             throw std::runtime_error("Error creating socket: " + std::string(strerror(errno)));
         }
@@ -21,7 +21,7 @@ class TCPSocket
 
     ~TCPSocket()
     {
-        close(sockfd_);
+        close(sockfd);
     }
 
     void bind(int port)
@@ -30,7 +30,7 @@ class TCPSocket
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port);
         addr.sin_addr.s_addr = INADDR_ANY;
-        if (::bind(sockfd_, (sockaddr *)&addr, sizeof(addr)) == -1)
+        if (::bind(sockfd, (sockaddr *)&addr, sizeof(addr)) == -1)
         {
             throw std::runtime_error("Error binding socket: " + std::string(strerror(errno)));
         }
@@ -38,7 +38,7 @@ class TCPSocket
 
     void listen(int backlog)
     {
-        if (::listen(sockfd_, backlog) == -1)
+        if (::listen(sockfd, backlog) == -1)
         {
             throw std::runtime_error("Error listening on socket: " + std::string(strerror(errno)));
         }
@@ -46,7 +46,7 @@ class TCPSocket
 
     TCPSocket accept()
     {
-        int clientfd = ::accept(sockfd_, nullptr, nullptr);
+        int clientfd = ::accept(sockfd, nullptr, nullptr);
         if (clientfd == -1)
         {
             throw std::runtime_error("Error accepting connection: " + std::string(strerror(errno)));
@@ -60,7 +60,7 @@ class TCPSocket
         addr.sin_family = AF_INET;
         addr.sin_port = htons(port);
         inet_pton(AF_INET, host.c_str(), &addr.sin_addr);
-        if (::connect(sockfd_, (sockaddr *)&addr, sizeof(addr)) == -1)
+        if (::connect(sockfd, (sockaddr *)&addr, sizeof(addr)) == -1)
         {
             throw std::runtime_error("Error connecting to server: " + std::string(strerror(errno)));
         }
@@ -72,7 +72,7 @@ class TCPSocket
         int len = data.length();
         while (len > 0)
         {
-            int bytes_sent = ::send(sockfd_, buffer, len, 0);
+            int bytes_sent = ::send(sockfd, buffer, len, 0);
             if (bytes_sent == -1)
             {
                 throw std::runtime_error("Error sending data: " + std::string(strerror(errno)));
@@ -85,18 +85,29 @@ class TCPSocket
     std::string recv(int max_len)
     {
         char buffer[max_len];
-        int bytes_recv = ::recv(sockfd_, buffer, max_len, 0);
-        if (bytes_recv == -1)
+        int bytes_recv = ::recv(sockfd, buffer, max_len, 0);
+        if (bytes_recv < 0)
         {
             throw std::runtime_error("Error receiving data: " + std::string(strerror(errno)));
         }
         return std::string(buffer, bytes_recv);
     }
 
-  private:
-    int sockfd_;
+    int getBoundPort()
+    {
+        sockaddr_in addr;
+        socklen_t len = sizeof(addr);
+        if (::getsockname(sockfd, (sockaddr *)&addr, &len) < 0)
+        {
+            throw std::runtime_error("Error getting bound address: " + std::string(strerror(errno)));
+        }
+        return htons(addr.sin_port);
+    }
 
-    TCPSocket(int sockfd) : sockfd_(sockfd)
+  private:
+    int sockfd;
+
+    TCPSocket(int sockfd) : sockfd(sockfd)
     {
     }
 };
