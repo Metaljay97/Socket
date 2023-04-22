@@ -21,9 +21,6 @@ if [ $# -eq 0 ]; then
 	exit 1
 fi
 
-# run submodule update
-git submodule update --init
-
 release=false
 debug=false
 coverage=false

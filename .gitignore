@@ -1,3 +1,18 @@
+### Build Dirs ###
+test/build/
+
+### Emacs ###
+# -*- mode: gitignore; -*-
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+### CMake ###
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

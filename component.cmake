@@ -1,9 +1,7 @@
 # component variables
 
-SET(COMPONENT_NAME support)
-SET(TEST_NAME supportTests)
-SET(SUBCOMPONENTS config exceptions events log utils)
-SET(3RD_PARTY spdlog)
+SET(COMPONENT_NAME socket)
+SET(TEST_NAME socketTests)
 SET(LINUX_RELEASE_FLAGS "-O2 -Wall -Werror")
 SET(LINUX_DEBUG_FLAGS "-O2 -g -Wall -Werror")
 SET(LINUX_COVERAGE_FLAGS "-O0 -g -Wall -Werror -fprofile-arcs -ftest-coverage")

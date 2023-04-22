@@ -3,11 +3,11 @@ INCLUDE("component.cmake")
 PROJECT(${COMPONENT_NAME})
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
 
-# add the subcomponents
-foreach(component ${SUBCOMPONENTS})
-  add_subdirectory("${component}")
-endforeach()
+# static lib
+file(GLOB_RECURSE src ${FILE_PATHS})
+ADD_LIBRARY(${COMPONENT_NAME} STATIC ${src})
+TARGET_LINK_LIBRARIES(${COMPONENT_NAME} PUBLIC ${LIB_DEPENDENCIES})
+TARGET_INCLUDE_DIRECTORIES(${COMPONENT_NAME} PUBLIC "inc/")
 
 # CPack
 set(CPACK_GENERATOR "TGZ")
-
