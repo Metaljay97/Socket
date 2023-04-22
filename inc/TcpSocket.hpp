@@ -1,3 +1,4 @@
+/*
 #include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
@@ -15,7 +16,7 @@ class TCPSocket
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
         if (sockfd == -1)
         {
-            throw std::runtime_error("Error creating socket: " + std::string(strerror(errno)));
+
         }
     }
 
@@ -111,3 +112,4 @@ class TCPSocket
     {
     }
 };
+*/
