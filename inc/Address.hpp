@@ -29,8 +29,10 @@ class Address
   public:
     /// Dtor
     virtual ~Address(){};
+
     /// @return the size of the address
     virtual socklen_t getSize() const = 0;
+
     /// @return the address family
     virtual sa_family_t getFamily() const = 0;
 
