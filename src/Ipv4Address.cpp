@@ -5,37 +5,37 @@
 #include "Ipv4Address.hpp"
 
 /////////////////////////////////////////////////////////////////
-explicit Ipv4Adress::Ipv4Address(const sockaddr_in &addr)
+Ipv4Address::Ipv4Address(const sockaddr_in &addr)
 {
     std::memcpy(&this->addr, &addr, this->SIZE);
 }
 
 /////////////////////////////////////////////////////////////////
-explicit Ipv4Adress::Ipv4Address(const sockaddr *addr)
+Ipv4Address::Ipv4Address(const sockaddr *addr)
 {
     std::memcpy(&this->addr, addr, this->SIZE);
 }
 
 /////////////////////////////////////////////////////////////////
-virtual socklen_t Ipv4Adress::getSize() const override
+socklen_t Ipv4Address::getSize() const
 {
     return this->SIZE;
 }
 
 /////////////////////////////////////////////////////////////////
-virtual sa_family_t Ipv4Adress::getFamily() const override
+sa_family_t Ipv4Address::getFamily() const
 {
     return ADDRESS_FAMILY;
 }
 
 /////////////////////////////////////////////////////////////////
-virtual void Ipv4Adress::setPort(in_port_t port) override
+void Ipv4Address::setPort(in_port_t port)
 {
     addr.sin_port = htons(port);
 }
 
 /////////////////////////////////////////////////////////////////
-virtual const sockaddr *Ipv4Adress::getSockaddr() const override
+const sockaddr *Ipv4Address::getSockaddr() const
 {
     return reinterpret_cast<const sockaddr *>(&this->addr);
 }

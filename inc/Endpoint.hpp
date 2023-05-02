@@ -10,6 +10,7 @@
 #else
 #include <arpa/inet.h>
 #include <cstring>
+#include <memory>
 #include <netdb.h>
 #include <string>
 #include <sys/socket.h>
@@ -38,7 +39,7 @@ class Endpoint
     /// @param port An in_port_t value representing the port number.
     /// @param protocol A InternetProtocol value representing the protocol.
     /// @see InternetProtocol
-    Endpoint(const std::shared_ptr<Address> &addr, in_port_t port, Protocol protocol);
+    Endpoint(const std::shared_ptr<Address> &addr, in_port_t port, InternetProtocol protocol);
 
     /// @brief Sets the network address of the Endpoint object.
     ///
@@ -89,7 +90,7 @@ class Endpoint
   protected:
     std::shared_ptr<Address> addr; ///< A shared pointer to an Address object representing the network address.
     in_port_t port;                ///< An in_port_t value representing the port number.
-    Protocol protocol;             ///< A Protocol value representing the protocol.
+    InternetProtocol protocol;     ///< A Protocol value representing the protocol.
 };
 
 #endif

@@ -50,16 +50,10 @@ class Ipv4Address : public Address
     static constexpr socklen_t SIZE = static_cast<socklen_t>(sizeof(sockaddr_in)); ///< The addr struct size
 
     /// @copydoc Address::getFamily()
-    virtual void setPort(in_port_t port) override
-    {
-        addr.sin_port = htons(port);
-    }
+    virtual void setPort(in_port_t port) override;
 
     /// @copydoc Address::getSockaddr()
-    virtual const sockaddr *getSockaddr() const override
-    {
-        return reinterpret_cast<const sockaddr *>(&this->addr);
-    }
+    virtual const sockaddr *getSockaddr() const override;
 };
 
 #endif
