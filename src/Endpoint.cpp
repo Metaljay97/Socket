@@ -5,19 +5,6 @@
 #include "Endpoint.hpp"
 
 /////////////////////////////////////////////////////////////////
-Endpoint::Endpoint(const std::shared_ptr<Address> &addr, in_port_t port, InternetProtocol protocol)
-    : addr(addr), port(port), protocol(protocol)
-{
-    this->addr->setPort(port);
-}
-
-/////////////////////////////////////////////////////////////////
-void Endpoint::setAddress(const std::shared_ptr<Address> &addr)
-{
-    this->addr = addr;
-}
-
-/////////////////////////////////////////////////////////////////
 void Endpoint::setPort(in_port_t port)
 {
     this->port = port;

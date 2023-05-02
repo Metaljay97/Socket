@@ -38,8 +38,14 @@ class Endpoint
     /// @param addr A shared pointer to an Address object representing the network address.
     /// @param port An in_port_t value representing the port number.
     /// @param protocol A InternetProtocol value representing the protocol.
+    /// @tparam ADDR_T The type of the address
     /// @see InternetProtocol
-    Endpoint(const std::shared_ptr<Address> &addr, in_port_t port, InternetProtocol protocol);
+    template <typename ADDR_T>
+    Endpoint(const ADDR_T &addr, in_port_t port, InternetProtocol protocol)
+        : addr(std::make_shared<ADDR_T>(addr)), port(port), protocol(protocol)
+    {
+        this->addr->setPort(port);
+    }
 
     /// @brief Sets the network address of the Endpoint object.
     ///
@@ -47,7 +53,10 @@ class Endpoint
     /// to an Address object.
     ///
     /// @param addr A shared pointer to an Address object representing the network address.
-    void setAddress(const std::shared_ptr<Address> &addr);
+    template <typename ADDR_T> void setAddress(const ADDR_T &addr)
+    {
+        this->addr = std::make_shared<ADDR_T>(addr);
+    }
 
     /// @brief Sets the port number of the Endpoint object.
     ///
