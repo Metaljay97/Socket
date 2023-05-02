@@ -34,13 +34,6 @@ class Ipv4Address : public Address
     /// @param addr A reference to the sockaddr struct used to construct and address from
     explicit Ipv4Address(const sockaddr *addr);
 
-    /// @brief Resolves a hostname into a vector of IPv4 addresses.
-    ///
-    /// @param hostname The hostname to resolve.
-    ///
-    /// @return A vector of shared pointers to Address objects representing IPv4 addresses.
-    static const std::vector<std::shared_ptr<Address>> resolve(std::string hostname);
-
     /// @copydoc Addres::getSize()
     virtual socklen_t getSize() const override;
 
