@@ -13,4 +13,4 @@ enum class InternetProtocol
     TCP = IPPROTO_TCP, ///< Transmission Control Protocol
     UDP = IPPROTO_UDP  ///< User Datagram Protocol
 };
-#endif PROTOCOL_H
+#endif
