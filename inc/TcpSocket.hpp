@@ -1,4 +1,3 @@
-/*
 #include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
@@ -8,33 +7,24 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-class TCPSocket
+#include "Address.hpp"
+#include "Endpoint.hpp"
+#include "Socket.hpp"
+
+class TcpSocket : public Socket<TcpSocket>
 {
   public:
-    TCPSocket()
+    TcpSocket()
     {
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
         if (sockfd == -1)
         {
-
         }
     }
 
-    ~TCPSocket()
+    ~TcpSocket()
     {
         close(sockfd);
-    }
-
-    void bind(int port)
-    {
-        sockaddr_in addr;
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(port);
-        addr.sin_addr.s_addr = INADDR_ANY;
-        if (::bind(sockfd, (sockaddr *)&addr, sizeof(addr)) == -1)
-        {
-            throw std::runtime_error("Error binding socket: " + std::string(strerror(errno)));
-        }
     }
 
     void listen(int backlog)
@@ -45,23 +35,19 @@ class TCPSocket
         }
     }
 
-    TCPSocket accept()
+    TcpSocket accept()
     {
         int clientfd = ::accept(sockfd, nullptr, nullptr);
         if (clientfd == -1)
         {
             throw std::runtime_error("Error accepting connection: " + std::string(strerror(errno)));
         }
-        return TCPSocket(clientfd);
+        return TcpSocket(clientfd);
     }
 
-    void connect(const std::string &host, int port)
+    void connect(Endpoint endpoint)
     {
-        sockaddr_in addr;
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(port);
-        inet_pton(AF_INET, host.c_str(), &addr.sin_addr);
-        if (::connect(sockfd, (sockaddr *)&addr, sizeof(addr)) == -1)
+        if (::connect(this->sockfd, endpoint.getSockaddr(), sizeof(endpoint.getSockaddr())) == -1)
         {
             throw std::runtime_error("Error connecting to server: " + std::string(strerror(errno)));
         }
@@ -105,11 +91,17 @@ class TCPSocket
         return htons(addr.sin_port);
     }
 
-  private:
-    int sockfd;
+    enum class PollResult
+    {
+        INCOMING_DATA,
+        INCOMING_CONNECTION,
+        OTHER ///< to be removed later
+    };
 
-    TCPSocket(int sockfd) : sockfd(sockfd)
+  private:
+    in_port_t sockfd;
+
+    TcpSocket(int sockfd) : sockfd(sockfd)
     {
     }
 };
-*/

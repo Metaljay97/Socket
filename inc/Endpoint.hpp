@@ -53,6 +53,7 @@ class Endpoint
     /// to an Address object.
     ///
     /// @param addr A shared pointer to an Address object representing the network address.
+    /// @tparam ADDR_T The type of the address
     template <typename ADDR_T> void setAddress(const ADDR_T &addr)
     {
         this->addr = std::make_shared<ADDR_T>(addr);
