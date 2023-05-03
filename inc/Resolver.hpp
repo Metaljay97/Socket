@@ -10,6 +10,7 @@
  */
 class Resolver
 {
+  public:
     /// @brief Resolves a hostname into a vector of addresses.
     ///
     /// @param hostname The hostname to resolve.
@@ -49,3 +50,5 @@ class Resolver
         return addresses;
     }
 }
+
+#endif
