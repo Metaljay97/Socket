@@ -91,13 +91,6 @@ class TcpSocket : public Socket<TcpSocket>
         return htons(addr.sin_port);
     }
 
-    enum class PollResult
-    {
-        INCOMING_DATA,
-        INCOMING_CONNECTION,
-        OTHER ///< to be removed later
-    };
-
   private:
     in_port_t sockfd;
 

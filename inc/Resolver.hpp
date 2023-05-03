@@ -2,6 +2,19 @@
  * @file Resolver.hpp
  */
 
+#include <arpa/inet.h>
+#include <cerrno>
+#include <cstring>
+#include <fcntl.h>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <sys/socket.h>
+#include <unistd.h>
+
+#include "Address.hpp"
+#include "Ipv4Address.hpp"
+
 #ifndef RESOLVER_HPP
 #define RESOLVER_HPP
 
@@ -19,6 +32,8 @@ class Resolver
     static const std::vector<std::shared_ptr<Address>> resolve(std::string hostname)
     {
         struct addrinfo hints, *res, *i;
+        std::memset(&hints, 0, sizeof(hints));
+
         std::vector<std::shared_ptr<Address>> addresses;
 
         hints.ai_family = AF_UNSPEC;
@@ -30,7 +45,7 @@ class Resolver
         {
             for (i = res; i != 0; i = i->ai_next)
             {
-                if (i->ai_family == AF_NET)
+                if (i->ai_family == AF_INET)
                 {
                     sockaddr_in *addr = reinterpret_cast<sockaddr_in *>(i->ai_addr);
                     addresses.emplace_back(std::make_shared<Ipv4Address>(*addr));
@@ -49,6 +64,6 @@ class Resolver
 
         return addresses;
     }
-}
+};
 
 #endif

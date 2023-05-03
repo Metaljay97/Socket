@@ -83,6 +83,11 @@ template <class Derived> class Socket
         }
     }
 
+    template <typename T> void setSockOpt(int level, int opt, T val)
+    {
+        setsockopt(sockfd, level, opt, (const void *)val, sizeof(T));
+    }
+
     void setBlocking(bool blocking)
     {
 #ifdef _WIN32
