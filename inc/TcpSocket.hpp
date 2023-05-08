@@ -1,3 +1,6 @@
+#ifndef TCP_SOCKET_HPP
+#define TCP_SOCKET_HPP
+
 #include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
@@ -20,6 +23,9 @@ class TcpSocket : public Socket<TcpSocket>
         if (sockfd == -1)
         {
         }
+
+        int optval = 1;
+        setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     }
 
     ~TcpSocket()
@@ -47,37 +53,10 @@ class TcpSocket : public Socket<TcpSocket>
 
     void connect(Endpoint endpoint)
     {
-        if (::connect(this->sockfd, endpoint.getSockaddr(), sizeof(endpoint.getSockaddr())) == -1)
+        if (::connect(this->sockfd, (struct sockaddr *)endpoint.getSockaddr(), endpoint.getSockaddrSize()) == -1)
         {
-            throw std::runtime_error("Error connecting to server: " + std::string(strerror(errno)));
+            throw std::runtime_error("Error connecting to address: " + std::string(strerror(errno)));
         }
-    }
-
-    void send(const std::string &data)
-    {
-        const char *buffer = data.c_str();
-        int len = data.length();
-        while (len > 0)
-        {
-            int bytes_sent = ::send(sockfd, buffer, len, 0);
-            if (bytes_sent == -1)
-            {
-                throw std::runtime_error("Error sending data: " + std::string(strerror(errno)));
-            }
-            buffer += bytes_sent;
-            len -= bytes_sent;
-        }
-    }
-
-    std::string recv(int max_len)
-    {
-        char buffer[max_len];
-        int bytes_recv = ::recv(sockfd, buffer, max_len, 0);
-        if (bytes_recv < 0)
-        {
-            throw std::runtime_error("Error receiving data: " + std::string(strerror(errno)));
-        }
-        return std::string(buffer, bytes_recv);
     }
 
     int getBoundPort()
@@ -92,9 +71,10 @@ class TcpSocket : public Socket<TcpSocket>
     }
 
   private:
-    in_port_t sockfd;
-
-    TcpSocket(int sockfd) : sockfd(sockfd)
+    TcpSocket(int sockfd)
     {
+        this->sockfd = sockfd;
     }
 };
+
+#endif

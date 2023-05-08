@@ -1,3 +1,6 @@
+#ifndef SOCKET_HPP
+#define SOCKET_HPP
+
 #include <arpa/inet.h>
 #include <cerrno>
 #include <cstring>
@@ -22,6 +25,31 @@ enum class PollResult
 template <class Derived> class Socket
 {
   public:
+    void isBlocking(bool blocking)
+    {
+        // Get the current file status flags.
+        int flags = fcntl(sockfd, F_GETFL, 0);
+        if (flags < 0)
+        {
+            throw std::runtime_error("Unable to get file status flags");
+        }
+
+        // Update the flags to make the file descriptor blocking or non-blocking.
+        if (blocking)
+        {
+            flags &= ~O_NONBLOCK; // Clear the O_NONBLOCK flag to make the file descriptor blocking.
+        }
+        else
+        {
+            flags |= O_NONBLOCK; // Set the O_NONBLOCK flag to make the file descriptor non-blocking.
+        }
+
+        // Set the updated file status flags.
+        if (fcntl(sockfd, F_SETFL, flags) < 0)
+        {
+            throw std::runtime_error("Unable to set file status flags");
+        }
+    }
     void send(const void *buffer, size_t len)
     {
         int bytes_sent = ::send(sockfd, buffer, len, 0);
@@ -122,6 +150,8 @@ template <class Derived> class Socket
         close(sockfd);
     }
 
-  private:
+  protected:
     in_port_t sockfd;
 };
+
+#endif

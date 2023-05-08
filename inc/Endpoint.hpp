@@ -19,6 +19,7 @@
 #endif
 
 #include "Address.hpp"
+#include "AddressView.hpp"
 #include "InternetProtocol.h"
 
 /**
@@ -32,17 +33,15 @@ class Endpoint
   public:
     /// @brief Constructs a new Endpoint object with the specified address, port, and protocol.
     ///
-    /// The constructor initializes the Endpoint object with a shared pointer to an Address object,
+    /// The constructor initializes the Endpoint object with a shared pointer to an Address View,
     /// an in_port_t value representing the port number, and a Protocol value representing the protocol.
     ///
     /// @param addr A shared pointer to an Address object representing the network address.
     /// @param port An in_port_t value representing the port number.
     /// @param protocol A InternetProtocol value representing the protocol.
     /// @tparam ADDR_T The type of the address
-    /// @see InternetProtocol
-    template <typename ADDR_T>
-    Endpoint(const ADDR_T &addr, in_port_t port, InternetProtocol protocol)
-        : addr(std::make_shared<ADDR_T>(addr)), port(port), protocol(protocol)
+    Endpoint(const std::shared_ptr<Address> &addr, in_port_t port, InternetProtocol protocol)
+        : addr(std::move(addr)), port(port), protocol(protocol)
     {
         this->addr->setPort(port);
     }
@@ -54,11 +53,10 @@ class Endpoint
     ///
     /// @param addr A shared pointer to an Address object representing the network address.
     /// @tparam ADDR_T The type of the address
-    template <typename ADDR_T> void setAddress(const ADDR_T &addr)
+    void setAddress(const std::shared_ptr<Address> &addr)
     {
-        this->addr = std::make_shared<ADDR_T>(addr);
+        this->addr = std::move(addr);
     }
-
     /// @brief Sets the port number of the Endpoint object.
     ///
     /// This method sets the port number of the Endpoint object to the specified in_port_t value,
@@ -96,6 +94,11 @@ class Endpoint
     ///
     /// @return A const pointer to a sockaddr structure representing the Endpoint object.
     const sockaddr *getSockaddr() const;
+
+    const socklen_t getSockaddrSize() const
+    {
+        return addr->getSize();
+    }
 
   protected:
     std::shared_ptr<Address> addr; ///< A shared pointer to an Address object representing the network address.

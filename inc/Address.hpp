@@ -1,7 +1,6 @@
 /**
  * @file Address.hpp
  */
-
 #ifndef ADDRESS_HPP
 #define ADDRESS_HPP
 
@@ -18,6 +17,7 @@
 #endif
 
 class Endpoint; ///< Forward declaration of the endpoint class.
+class AddressView;
 
 /**
  * @brief Address Interface, used represent an internet address.
@@ -25,6 +25,7 @@ class Endpoint; ///< Forward declaration of the endpoint class.
 class Address
 {
     friend class Endpoint; ///< To allow for manipulation of the internal sockaddr.
+    friend class AddressView;
 
   public:
     /// Dtor
@@ -35,6 +36,8 @@ class Address
 
     /// @return the address family
     virtual sa_family_t getFamily() const = 0;
+
+    virtual std::string toString() const = 0;
 
   protected:
     /// @brief Returns a const pointer to a sockaddr structure representing the address object.

@@ -39,6 +39,15 @@ class Ipv4Address : public Address
 
     /// @copydoc Address::getFamily()
     virtual sa_family_t getFamily() const override;
+
+    virtual std::string toString() const override
+    {
+        char ip_str[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &(addr.sin_addr), ip_str, INET_ADDRSTRLEN);
+
+        return ip_str;
+    }
+
     /// Dtor
     virtual ~Ipv4Address(){};
 

@@ -13,8 +13,8 @@
 #include <unistd.h>
 
 #include "Address.hpp"
+#include "AddressView.hpp"
 #include "Ipv4Address.hpp"
-
 #ifndef RESOLVER_HPP
 #define RESOLVER_HPP
 
@@ -61,6 +61,8 @@ class Resolver
             /// @todo, do gai stuff
             throw std::runtime_error("Error resolving address: " + std::string(strerror(errno)));
         }
+
+        freeaddrinfo(res);
 
         return addresses;
     }
